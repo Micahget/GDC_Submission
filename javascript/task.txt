@@ -1,0 +1,7 @@
+[
+  {
+    "priority": "3",
+    "taskDetail": "clean my room",
+    "completed": false
+  }
+]
