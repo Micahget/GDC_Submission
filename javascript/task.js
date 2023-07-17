@@ -29,6 +29,11 @@ function add(priority, taskDetail) {
     taskDetail: taskDetail,
     completed: false
   };
+  
+  if(tasks.find((task) => task.priority === priority)) {
+    console.log(`Error: item with priority ${priority} already exists.`);
+   return;
+  }
 
   tasks.push(task);
 
@@ -74,17 +79,27 @@ function done(priority) {
     // console.log('Creating New File');
   }
 
-  if (!tasks.find((task) => task.priority === priority)) {
-    console.log(`Error: no incomplete item with index #${priority} exists.`);
-    return;
-  }
+ 
   let task = tasks.find((task) => task.priority === priority); // find the tasks
+
+ if(completedTasks.includes(task)) {
+    console.log(`Error: item with priority ${priority} already exists.`);
+   return;
+  }
+
 
   try {
     const incompletedTasks = tasks.filter((task) => task.priority !== priority);
     
     fs.writeFileSync('task.txt', incompletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
+    // items should not be added if they already exist
+    if(completedTasks.includes(task)) {
+      return;
+    }
     completedTasks.push(task); // push the completed task to the completedTasks array
+    // make empty string is ignored and there is no same task added monre than once
+    completedTasks = completedTasks.filter((task) => task.taskDetail !== '');
+    
     fs.writeFileSync('complete.txt', completedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
     console.log(`Marked item as done.`);
   } catch (error) {
@@ -108,15 +123,13 @@ function del(priority) {
   } catch (error) {
     
   }
-  if (!tasks.includes(tasks.find((task) => task.priority === priority))) {
-    console.log(`Error: task with index #${priority} does not exist. Nothing deleted.`);
-    return;
-  }
+ 
   let task = tasks.find((task) => task.priority === priority); // find the tasks
+  
 
   try {
-    const incompletedTasks = tasks.filter((task) => task.priority !== priority);
-    fs.writeFileSync('task.txt', incompletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
+    const notDeletedTasks = tasks.filter((task) => task.priority !== priority);
+    fs.writeFileSync('task.txt', notDeletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
     console.log(`Deleted task #${priority}`);
   } catch (error) {
     console.error("Error:", error);
