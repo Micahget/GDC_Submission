@@ -73,7 +73,6 @@ function done(priority) {
   } catch (error) {
     // console.log('Creating New File');
   }
-// if there is no task with the given priority
 
   if (!tasks.find((task) => task.priority === priority)) {
     console.log(`Error: no incomplete item with index #${priority} exists.`);
@@ -109,7 +108,6 @@ function del(priority) {
   } catch (error) {
     
   }
- // if there is no task with the given priority
   if (!tasks.includes(tasks.find((task) => task.priority === priority))) {
     console.log(`Error: task with index #${priority} does not exist. Nothing deleted.`);
     return;
