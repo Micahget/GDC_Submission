@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "priority": "3",
+    "taskDetail": "clean my room",
+    "completed": false
+  },
+  {
+    "priority": "23",
+    "taskDetail": "cleasdfaan my roomwqasdf",
+    "completed": false
+  },
+  {
+    "priority": "34",
+    "taskDetail": "clean my room",
+    "completed": false
+  },
+  {
+    "priority": "233",
+    "taskDetail": "cleasdfaan my roomwqasdf",
+    "completed": false
+  },
+  {
+    "priority": "323",
+    "taskDetail": "clean my roomwq",
+    "completed": false
+  },
+  {
+    "priority": "3233",
+    "taskDetail": "cleasdfaan my roomwqasdf",
+    "completed": false
+  },
+  {
+    "priority": "3423",
+    "taskDetail": "clean my roomwqasdf",
+    "completed": false
+  }
+]

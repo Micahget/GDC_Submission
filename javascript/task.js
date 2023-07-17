@@ -76,6 +76,21 @@ function del(priority){
 
 }
 
+// method to list all the tasks by according to priority
+function ls(){
+  try {
+    const fileData = fs.readFileSync('task.txt', 'utf8');
+    tasks = JSON.parse(fileData);
+  }
+  catch (error) {
+    console.log("All Tasks are completed");
+    return;
+  }
+
+  let id = 0;
+  tasks.forEach(task => console.log(`${id++}. ${task.taskDetail} - ${task.priority}`));
+}
+
 const command = process.argv[2]; // function
 
 switch (command) {
@@ -103,6 +118,9 @@ switch (command) {
     } else {
       del(priorityId1);
     }
+    break;
+  case 'ls':
+    ls();
     break;
   default:
     console.log('Usage: node task.js <command>');
