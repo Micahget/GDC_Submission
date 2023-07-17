@@ -52,15 +52,61 @@ function done(priority){
       }
 }
 
+function del(priority){
+  try {
+    const fileData = fs.readFileSync('task.txt', 'utf8');
+    tasks = JSON.parse(fileData);
+  }
+  catch (error) {
+    console.log("All Tasks are completed");
+    return;
+  }
+
+  let task = tasks.find(task => task.priority === priority); // find the tasks
+
+  try {
+    // find the tasks with are not the task to be deleted
+    const incompletedTasks = tasks.filter(task => task.priority !== priority);
+    fs.writeFileSync('task.txt', JSON.stringify(incompletedTasks, null, 2)); // overwrite the task
+    console.log(`Task deleted sucessful`);
+  }
+  catch (error) {
+    console.error('Error:', error);
+  }
+
+}
 
 const command = process.argv[2]; // function
-const priority = process.argv[3]; // priority
-const taskDetail = process.argv[4];
 
-if( command == 'add'){
-  add(priority, taskDetail)
-}
-else if( command == 'done'){
-  done(priority)
+switch (command) {
+  case 'add':
+    const priority = process.argv[3];
+    const taskDetail = process.argv[4];
+    if (!priority || !taskDetail) {
+      console.log('Usage: node task.js add <priority> <taskDetail>');
+    } else {
+      add(priority, taskDetail);
+    }
+    break;
+  case 'done':
+    const priorityId = process.argv[3];
+    if (!priorityId) {
+      console.log('Usage: node task.js complete <id>');
+    } else {
+      done(priorityId);
+    }
+    break;
+  case 'del':
+    const priorityId1 = process.argv[3];
+    if (!priorityId1) {
+      console.log('Usage: node task.js complete <id>');
+    } else {
+      del(priorityId1);
+    }
+    break;
+  default:
+    console.log('Usage: node task.js <command>');
+    console.log('Commands: add, remove, complete, list');
+    break;
 }
 
