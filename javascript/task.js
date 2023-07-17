@@ -81,26 +81,19 @@ function done(priority) {
 
  
   let task = tasks.find((task) => task.priority === priority); // find the tasks
-
- if(completedTasks.includes(task)) {
-    console.log(`Error: item with priority ${priority} already exists.`);
-   return;
+  if(tasks.find((task) => task.priority !== priority)){
+    console.log(`Error: no incomplete item with index #${priority} exists.`)
   }
-
+  completedTasks.push(task)
 
   try {
     const incompletedTasks = tasks.filter((task) => task.priority !== priority);
     
     fs.writeFileSync('task.txt', incompletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
-    // items should not be added if they already exist
-    if(completedTasks.includes(task)) {
-      return;
-    }
-    completedTasks.push(task); // push the completed task to the completedTasks array
-    // make empty string is ignored and there is no same task added monre than once
-    completedTasks = completedTasks.filter((task) => task.taskDetail !== '');
+     
     
     fs.writeFileSync('complete.txt', completedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
+
     console.log(`Marked item as done.`);
   } catch (error) {
     console.error("Error:", error);
@@ -197,17 +190,18 @@ function report() {
   } catch (error) {
     // console.log('Creating New File');
   }
-  let id = 0;
+  let id = 1;
 
   console.log(`Pending: ${tasks.length}`);
   tasks.sort((a, b) => a.priority - b.priority); // sort by priority
   tasks.forEach((task) =>
     console.log(`${id++}. ${task.taskDetail} [${task.priority}]`)
   );
+  id = 1;
   console.log(`Completed: ${completedTasks.length}`);
   completedTasks.sort((a, b) => a.priority - b.priority);
   completedTasks.forEach((task) =>
-    console.log(`${id++}. ${task.taskDetail} [${task.priority}]`)
+    console.log(`${id++}. ${task.taskDetail}`)
   );
 }
 
