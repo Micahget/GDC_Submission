@@ -71,7 +71,7 @@ function done(priority) {
         return {
           priority: linePriority,
           taskDetail: lineTaskDetail.join(' '),
-          completed: false
+          completed: true
         };
       });
     }
@@ -92,7 +92,7 @@ function done(priority) {
     fs.writeFileSync('task.txt', incompletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
      
     
-    fs.writeFileSync('complete.txt', completedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
+    fs.writeFileSync('complete.txt', completedTasks.map(task => `${task.taskDetail}`).join('\n'));
 
     console.log(`Marked item as done.`);
   } catch (error) {
