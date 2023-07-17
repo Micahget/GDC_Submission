@@ -5,53 +5,83 @@ const fs = require("fs");
 let tasks = [];
 let completedTasks = [];
 function add(priority, taskDetail) {
+  // let tasks = [];
+
   try {
-    const fileData = fs.readFileSync("task.txt", "utf8");
-    tasks = JSON.parse(fileData);
+    const fileData = fs.readFileSync('task.txt', 'utf8');
+    if (fileData.length > 0) {
+      tasks = fileData.split('\n').map(line => {
+        const [linePriority, ...lineTaskDetail] = line.split(' ');
+        return {
+          priority: linePriority,
+          taskDetail: lineTaskDetail.join(' '),
+          completed: false
+        };
+      });
+    }
   } catch (error) {
-    // create New file if there is no task.txt file
-    console.log("Creating New File");
+    console.log('Creating New File');
   }
 
-  // let maxId = 0
+
   let task = {
-    // id: maxId + 1,
     priority: priority,
     taskDetail: taskDetail,
-    completed: false,
+    completed: false
   };
 
   tasks.push(task);
 
   try {
-    fs.writeFileSync("task.txt", JSON.stringify(tasks, null, 2));
-    console.log(`Task aded sucessful`);
+    fs.writeFileSync('task.txt', tasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
+    console.log('Task added successfully');
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
   }
 }
 
+
 function done(priority) {
   try {
-    const fileData = fs.readFileSync("task.txt", "utf8");
-    tasks = JSON.parse(fileData);
+    const fileData = fs.readFileSync('task.txt', 'utf8');
+    if (fileData.length > 0) {
+      tasks = fileData.split('\n').map(line => {
+        const [linePriority, ...lineTaskDetail] = line.split(' ');
+        return {
+          priority: linePriority,
+          taskDetail: lineTaskDetail.join(' '),
+          completed: false
+        };
+      });
+    }
   } catch (error) {
-    console.log("Creating new file ...");
+    console.log('Creating New File');
   }
+  
   try {
-    const fileData1 = fs.readFileSync("complete.txt", "utf8");
-    completedTasks = JSON.parse(fileData1);
+    const fileData1 = fs.readFileSync('complete.txt', 'utf8');
+    if (fileData1.length > 0) {
+      completedTasks = fileData1.split('\n').map(line => {
+        const [linePriority, ...lineTaskDetail] = line.split(' ');
+        return {
+          priority: linePriority,
+          taskDetail: lineTaskDetail.join(' '),
+          completed: false
+        };
+      });
+    }
   } catch (error) {
-    console.log("Creating new file ...");
+    console.log('Creating New File');
   }
 
   let task = tasks.find((task) => task.priority === priority); // find the tasks
 
   try {
     const incompletedTasks = tasks.filter((task) => task.priority !== priority);
-    fs.writeFileSync("task.txt", JSON.stringify(incompletedTasks, null, 2)); // overwrite the task
+    
+    fs.writeFileSync('task.txt', incompletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
     completedTasks.push(task); // push the completed task to the completedTasks array
-    fs.writeFileSync("complete.txt", JSON.stringify(completedTasks, null, 2)); // write the completed task to the completed.txt file
+    fs.writeFileSync('complete.txt', completedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
     console.log(`Task completed sucessful`);
   } catch (error) {
     console.error("Error:", error);
@@ -60,18 +90,26 @@ function done(priority) {
 
 function del(priority) {
   try {
-    const fileData = fs.readFileSync("task.txt", "utf8");
-    tasks = JSON.parse(fileData);
+    const fileData = fs.readFileSync('task.txt', 'utf8');
+    if (fileData.length > 0) {
+      tasks = fileData.split('\n').map(line => {
+        const [linePriority, ...lineTaskDetail] = line.split(' ');
+        return {
+          priority: linePriority,
+          taskDetail: lineTaskDetail.join(' '),
+          completed: false
+        };
+      });
+    }
   } catch (error) {
-    console.log("All Tasks are completed");
-    return;
+    console.log('Creating New File');
   }
 
   let task = tasks.find((task) => task.priority === priority); // find the tasks
 
   try {
     const incompletedTasks = tasks.filter((task) => task.priority !== priority);
-    fs.writeFileSync("task.txt", JSON.stringify(incompletedTasks, null, 2)); // overwrite the task
+    fs.writeFileSync('task.txt', incompletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
     console.log(`Task deleted sucessful`);
   } catch (error) {
     console.error("Error:", error);
@@ -80,35 +118,62 @@ function del(priority) {
 
 function ls() {
   try {
-    const fileData = fs.readFileSync("task.txt", "utf8");
-    tasks = JSON.parse(fileData);
+    const fileData = fs.readFileSync('task.txt', 'utf8');
+    if (fileData.length > 0) {
+      tasks = fileData.split('\n').map(line => {
+        const [linePriority, ...lineTaskDetail] = line.split(' ');
+        return {
+          priority: linePriority,
+          taskDetail: lineTaskDetail.join(' '),
+          completed: false
+        };
+      });
+    }
+    // console.log("we reached here")
   } catch (error) {
-    console.log("All Tasks are completed");
+    console.log('tasks are Completed');
     return;
   }
 
+  
   let id = 0;
-  tasks.forEach((task) =>
-    console.log(`${id++}. ${task.taskDetail} - ${task.priority}`)
-  );
+  // console.log(tasks)
+  tasks.length>0 ? tasks.forEach((task) =>
+    console.log(`${id++}. ${task.taskDetail} - [${task.priority}]`)
+  ) : console.log("All tasks are completed");
 }
 function report() {
   try {
-    const fileData = fs.readFileSync("task.txt", "utf8");
-    tasks = JSON.parse(fileData);
+    const fileData = fs.readFileSync('task.txt', 'utf8');
+    if (fileData.length > 0) {
+      tasks = fileData.split('\n').map(line => {
+        const [linePriority, ...lineTaskDetail] = line.split(' ');
+        return {
+          priority: linePriority,
+          taskDetail: lineTaskDetail.join(' '),
+          completed: false
+        };
+      });
+    }
   } catch (error) {
-    console.log("All Tasks are completed");
+    console.log('Creating New File');
   }
 
   try {
-    const fileData1 = fs.readFileSync("complete.txt", "utf8");
-    // console.log(fileData1);
-    completedTasks = JSON.parse(fileData1);
-    console.log(completedTasks);
+    const fileData = fs.readFileSync('complete.txt', 'utf8');
+    if (fileData.length > 0) {
+      completedTasks = fileData.split('\n').map(line => {
+        const [linePriority, ...lineTaskDetail] = line.split(' ');
+        return {
+          priority: linePriority,
+          taskDetail: lineTaskDetail.join(' '),
+          completed: false
+        };
+      });
+    }
   } catch (error) {
-    console.log("All Tasks are completed");
+    console.log('Creating New File');
   }
-
   let id = 0;
 
   console.log(`Pending Tasks: ${tasks.length}`);
