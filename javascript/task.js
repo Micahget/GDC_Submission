@@ -124,7 +124,10 @@ function del(priority) {
     
   }
  
-  let task = tasks.find((task) => task.priority === priority); // find the tasks
+  // let task = tasks.find((task) => task.priority === priority); // find the tasks
+  if(tasks.find((task) => task.priority !== priority)){
+    console.log(`Error: task with index #${priority} does not exist. Nothing deleted.`)
+  }
   
 
   try {
