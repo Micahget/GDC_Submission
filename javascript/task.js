@@ -20,7 +20,7 @@ function add(priority, taskDetail) {
       });
     }
   } catch (error) {
-    console.log('Creating New File');
+    
   }
 
 
@@ -34,7 +34,7 @@ function add(priority, taskDetail) {
 
   try {
     fs.writeFileSync('task.txt', tasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
-    console.log('Task added successfully');
+    console.log(`Added task: \"${task.taskDetail}\" with priority ${task.priority}`);
   } catch (error) {
     console.error('Error:', error);
   }
@@ -71,9 +71,14 @@ function done(priority) {
       });
     }
   } catch (error) {
-    console.log('Creating New File');
+    // console.log('Creating New File');
   }
+// if there is no task with the given priority
 
+  if (!tasks.find((task) => task.priority === priority)) {
+    console.log(`Error: no incomplete item with index #${priority} exists.`);
+    return;
+  }
   let task = tasks.find((task) => task.priority === priority); // find the tasks
 
   try {
@@ -82,7 +87,7 @@ function done(priority) {
     fs.writeFileSync('task.txt', incompletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
     completedTasks.push(task); // push the completed task to the completedTasks array
     fs.writeFileSync('complete.txt', completedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
-    console.log(`Task completed sucessful`);
+    console.log(`Marked item as done.`);
   } catch (error) {
     console.error("Error:", error);
   }
@@ -102,15 +107,19 @@ function del(priority) {
       });
     }
   } catch (error) {
-    console.log('Creating New File');
+    
   }
-
+ // if there is no task with the given priority
+  if (!tasks.includes(tasks.find((task) => task.priority === priority))) {
+    console.log(`Error: task with index #${priority} does not exist. Nothing deleted.`);
+    return;
+  }
   let task = tasks.find((task) => task.priority === priority); // find the tasks
 
   try {
     const incompletedTasks = tasks.filter((task) => task.priority !== priority);
     fs.writeFileSync('task.txt', incompletedTasks.map(task => `${task.priority} ${task.taskDetail}`).join('\n'));
-    console.log(`Task deleted sucessful`);
+    console.log(`Deleted task #${priority}`);
   } catch (error) {
     console.error("Error:", error);
   }
@@ -131,16 +140,16 @@ function ls() {
     }
     // console.log("we reached here")
   } catch (error) {
-    console.log('tasks are Completed');
+    console.log('There are no pending tasks!');
     return;
   }
 
   
-  let id = 0;
+  let id = 1;
   // console.log(tasks)
   tasks.length>0 ? tasks.forEach((task) =>
-    console.log(`${id++}. ${task.taskDetail} - [${task.priority}]`)
-  ) : console.log("All tasks are completed");
+    console.log(`${id++}. ${task.taskDetail} [${task.priority}]`)
+  ) : console.log("There are no pending tasks!");
 }
 function report() {
   try {
@@ -156,7 +165,7 @@ function report() {
       });
     }
   } catch (error) {
-    console.log('Creating New File');
+    // console.log('Creating New File');
   }
 
   try {
@@ -172,30 +181,31 @@ function report() {
       });
     }
   } catch (error) {
-    console.log('Creating New File');
+    // console.log('Creating New File');
   }
   let id = 0;
 
-  console.log(`Pending Tasks: ${tasks.length}`);
+  console.log(`Pending: ${tasks.length}`);
   tasks.sort((a, b) => a.priority - b.priority); // sort by priority
   tasks.forEach((task) =>
-    console.log(`${id++}. ${task.taskDetail} - [${task.priority}]`)
+    console.log(`${id++}. ${task.taskDetail} [${task.priority}]`)
   );
-  console.log(`Completed Tasks: ${completedTasks.length}`);
+  console.log(`Completed: ${completedTasks.length}`);
   completedTasks.sort((a, b) => a.priority - b.priority);
   completedTasks.forEach((task) =>
-    console.log(`${id++}. ${task.taskDetail} - [${task.priority}]`)
+    console.log(`${id++}. ${task.taskDetail} [${task.priority}]`)
   );
 }
 
 function help() {
-  console.log(`Usage :-
-  ./task.js add 2 hello world        #Add a new item with priority 2
-  ./task ls                          #List all pending items, sorted by priority
-  ./task del Number                 #Delete item with given number
-  ./task done Number                #Mark item with given number as done
-  ./task report                      #Show statistics
-  ./task help                        #Show usage`);
+  let usage = `Usage :-
+$ ./task add 2 hello world    # Add a new item with priority 2 and text "hello world" to the list
+$ ./task ls                   # Show incomplete priority list items sorted by priority in ascending order
+$ ./task del INDEX            # Delete the incomplete item with the given index
+$ ./task done INDEX           # Mark the incomplete item with the given index as complete
+$ ./task help                 # Show usage
+$ ./task report               # Statistics`;
+  console.log(usage);
 }
 
 const command = process.argv[2]; // function
@@ -205,7 +215,7 @@ switch (command) {
     const priority = process.argv[3];
     const taskDetail = process.argv[4];
     if (!priority || !taskDetail) {
-      console.log("Usage: node task.js add <priority> <taskDetail>");
+      console.log("Error: Missing tasks string. Nothing added!");
     } else {
       add(priority, taskDetail);
     }
@@ -213,7 +223,7 @@ switch (command) {
   case "done":
     const priorityId = process.argv[3];
     if (!priorityId) {
-      console.log("Usage: node task.js complete <id>");
+      console.log("Error: Missing NUMBER for marking tasks as done.");
     } else {
       done(priorityId);
     }
@@ -221,7 +231,7 @@ switch (command) {
   case "del":
     const priorityId1 = process.argv[3];
     if (!priorityId1) {
-      console.log("Usage: node task.js complete <id>");
+      console.log("Error: Missing NUMBER for deleting tasks.");
     } else {
       del(priorityId1);
     }
