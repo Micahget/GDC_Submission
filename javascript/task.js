@@ -38,7 +38,6 @@ function done(priority) {
   } catch (error) {
     console.log("Creating new file ...");
   }
-  // fetch the completed task from the completed.txt file
   try {
     const fileData1 = fs.readFileSync("complete.txt", "utf8");
     completedTasks = JSON.parse(fileData1);
@@ -49,7 +48,6 @@ function done(priority) {
   let task = tasks.find((task) => task.priority === priority); // find the tasks
 
   try {
-    // find the tasks with are not the task to be completed
     const incompletedTasks = tasks.filter((task) => task.priority !== priority);
     fs.writeFileSync("task.txt", JSON.stringify(incompletedTasks, null, 2)); // overwrite the task
     completedTasks.push(task); // push the completed task to the completedTasks array
@@ -72,7 +70,6 @@ function del(priority) {
   let task = tasks.find((task) => task.priority === priority); // find the tasks
 
   try {
-    // find the tasks with are not the task to be deleted
     const incompletedTasks = tasks.filter((task) => task.priority !== priority);
     fs.writeFileSync("task.txt", JSON.stringify(incompletedTasks, null, 2)); // overwrite the task
     console.log(`Task deleted sucessful`);
@@ -81,7 +78,6 @@ function del(priority) {
   }
 }
 
-// method to list all the tasks by according to priority
 function ls() {
   try {
     const fileData = fs.readFileSync("task.txt", "utf8");
@@ -96,7 +92,6 @@ function ls() {
     console.log(`${id++}. ${task.taskDetail} - ${task.priority}`)
   );
 }
-// method to print the report of number of completed and incompleted tasks
 function report() {
   try {
     const fileData = fs.readFileSync("task.txt", "utf8");
@@ -108,7 +103,6 @@ function report() {
   try {
     const fileData1 = fs.readFileSync("complete.txt", "utf8");
     // console.log(fileData1);
-    // the data in the file is in object form so we need to parse it not in json format
     completedTasks = JSON.parse(fileData1);
     console.log(completedTasks);
   } catch (error) {
@@ -118,17 +112,25 @@ function report() {
   let id = 0;
 
   console.log(`Pending Tasks: ${tasks.length}`);
-  //list according to priority in ascending order
-  tasks.sort((a, b) => a.priority - b.priority);
+  tasks.sort((a, b) => a.priority - b.priority); // sort by priority
   tasks.forEach((task) =>
     console.log(`${id++}. ${task.taskDetail} - [${task.priority}]`)
   );
   console.log(`Completed Tasks: ${completedTasks.length}`);
-  //list according to priority in ascending order
   completedTasks.sort((a, b) => a.priority - b.priority);
   completedTasks.forEach((task) =>
     console.log(`${id++}. ${task.taskDetail} - [${task.priority}]`)
   );
+}
+
+function help() {
+  console.log(`Usage :-
+  ./task.js add 2 hello world        #Add a new item with priority 2
+  ./task ls                          #List all pending items, sorted by priority
+  ./task del Number                 #Delete item with given number
+  ./task done Number                #Mark item with given number as done
+  ./task report                      #Show statistics
+  ./task help                        #Show usage`);
 }
 
 const command = process.argv[2]; // function
@@ -165,8 +167,10 @@ switch (command) {
   case "report":
     report();
     break;
+  case "help":
+    help();
+    break;
   default:
-    console.log("Usage: node task.js <command>");
-    console.log("Commands: add, remove, complete, list");
+    help();
     break;
 }
